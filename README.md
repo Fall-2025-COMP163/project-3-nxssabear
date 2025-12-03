@@ -13,9 +13,9 @@ Date: 02-Dec-2025
 *This module handles loading and validating game data from text files.*
 
 ### Data Loading Functions
-| load_quests | Load quest data from file. | data/quests.txt |
-| load_items | Load item data from file. | data/items.txt |
-| create_default_data_files | Create default quests.txt and items.txt files if they do not exist, and creates the data directory. | N/A |
+| load_quests -  Load quest data from file. | data/quests.txt |
+| load_items -  Load item data from file. | data/items.txt |
+| create_default_data_files - Create default quests.txt and items.txt files if they do not exist, and creates the data directory.
 
 ### Expected Data Formats
 
