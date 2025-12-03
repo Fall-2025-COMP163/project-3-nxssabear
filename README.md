@@ -40,11 +40,11 @@ Data files must be separated by blank lines (`\n\n`) into blocks.
 
 ### Management Functions
 
-| create_character | Creates a new character dictionary with base stats determined by class (Warrior, Mage, Rogue, Cleric). |
-| save_character | Writes character data to {character_name}_save.txt in data/save_games. List fields are saved as comma-separated strings. |
-| load_character | Reads character data from a save file, parsing comma-separated strings back into Python lists. Includes comprehensive error handling for corrupted files. |
-| list_saved_characters | Returns a list of character names in the save directory. |
-| delete_character | Removes a character's save file. |
+| create_character: Creates a new character dictionary with base stats determined by class (Warrior, Mage, Rogue, Cleric). |
+| save_character: Writes character data to {character_name}_save.txt in data/save_games. List fields are saved as comma-separated strings. |
+| load_character: Reads character data from a save file, parsing comma-separated strings back into Python lists. Includes comprehensive error handling for corrupted files. |
+| list_saved_characters:  Returns a list of character names in the save directory. |
+| delete_character: Removes a character's save file. |
 
 ### Operations & Growth
 * **gain_experience(character, xp_amount)**: Adds XP, handles level-up (level +1, max\_health +15, strength +4, magic +3).
