@@ -2,9 +2,9 @@
 COMP 163 - Project 3: Quest Chronicles
 Main Game Module - Starter Code
 
-Name: [Your Name Here]
+Name: Vanessa Gray
 
-AI Usage: [Document any AI assistance used]
+AI Usage: AI was used to help generate the initial structure and functions of this module.
 
 This is the main game file that ties all modules together.
 Demonstrates module integration and complete game flow.
@@ -43,7 +43,7 @@ def main_menu():
     
     Returns: Integer choice (1-3)
     """
-    # TODO: Implement main menu display
+    # main menu display
     # Show options
     # Get user input
     # Validate input (1-3)
@@ -73,7 +73,7 @@ def new_game():
     """
     global current_character
     
-    # TODO: Implement new game creation
+    # new game creation
     # Get character name from user
     # Get character class from user
     # Try to create character with character_manager.create_character()
@@ -96,14 +96,14 @@ def new_game():
         '3': 'Rogue',
         '4': 'Cleric'
     }
-
-    if class_choice not in class_map:
+ 
+    if class_choice not in class_map: 
         print("Invalid class choice. Please try again.")
         return new_game()   
-    char_class = class_map[class_choice]
+    char_class = class_map[class_choice] 
 
-    try:
-        current_character = character_manager.create_character(name, char_class)
+    try: 
+        current_character = character_manager.create_character(name, char_class) 
         print(f"Character '{name}' the {char_class} created successfully!")
     except InvalidCharacterClassError:
         print("Error: Invalid character class selected.")
@@ -118,7 +118,7 @@ def load_game():
     """
     global current_character
     
-    # TODO: Implement game loading
+    # game loading
     # Get list of saved characters
     # Display them to user
     # Get user choice
@@ -128,14 +128,14 @@ def load_game():
 
     print("\n=== Load Game ===")
 
-    saved_characters = character_manager.list_saved_characters()
+    saved_characters = character_manager.list_saved_characters() 
     if not saved_characters:
         print("No saved characters found. Please start a new game.")
         return
     
     print("Saved Characters:")
     for i, char_name in enumerate(saved_characters, start=1):
-        print(f"{i}. {char_name}")
+        print(f"{i}. {char_name}") 
     
     answer = input("Enter the number of the character to load: ").strip()
 
@@ -180,7 +180,7 @@ def game_loop():
     
     game_running = True
     
-    # TODO: Implement game loop
+    #  game loop
     # While game_running:
     #   Display game menu
     #   Get player choice
@@ -220,7 +220,7 @@ def game_menu():
     
     Returns: Integer choice (1-6)
     """
-    # TODO: Implement game menu
+    # game menu
     print("\n=== Game Menu ===")
     print("1. View Character Stats")
     print("2. View Inventory")
@@ -243,7 +243,7 @@ def view_character_stats():
     """Display character information"""
     global current_character
     
-    # TODO: Implement stats display
+    # stats display
     # Show: name, class, level, health, stats, gold, etc.
     # Use character_manager functions
     # Show quest progress using quest_handler
@@ -266,11 +266,11 @@ def view_inventory():
     """Display and manage inventory"""
     global current_character, all_items
     
-    # TODO: Implement inventory menu
+    # inventory menu
     # Show current inventory
     # Options: Use item, Equip weapon/armor, Drop item
-    # Handle exceptions from inventory_system
-    inventory_system.display_inventory(current_character, all_items)
+    # Handle exceptions from inventory_system 
+    inventory_system.display_inventory(current_character, all_items) 
     answer = input("Enter the item name to use/equip/drop or 'back' to return: ").strip()
     if answer.lower() == 'back':
         return
@@ -279,7 +279,7 @@ def quest_menu():
     """Quest management menu"""
     global current_character, all_quests
     
-    # TODO: Implement quest menu
+    # quest menu
     # Show:
     #   1. View Active Quests
     #   2. View Available Quests
@@ -308,7 +308,7 @@ def explore():
     """Find and fight random enemies"""
     global current_character
     
-    # TODO: Implement exploration
+    # exploration
     # Generate random enemy based on character level
     # Start combat with combat_system.SimpleBattle
     # Handle combat results (XP, gold, death)
@@ -401,7 +401,7 @@ def shop():
         else:
             print("Invalid choice. Please select 1, 2, or 3.")
 
-    # TODO: Implement shop
+    #  shop
     # Show available items for purchase
     # Show current gold
     # Options: Buy item, Sell item, Back
@@ -416,14 +416,14 @@ def save_game():
     """Save current game state"""
     global current_character
     
-    # TODO: Implement save
+    #  save
     # Use character_manager.save_character()
     # Handle any file I/O exceptions
     if current_character is None:
         print("No character to save.")
         return
     
-    try:
+    try: 
         character_manager.save_character(current_character)
         print(f"Character '{current_character['name']}' saved successfully!")
     except PermissionError:
@@ -435,13 +435,13 @@ def load_game_data():
     """Load all quest and item data from files"""
     global all_quests, all_items
     
-    # TODO: Implement data loading
+    # data loading
     # Try to load quests with game_data.load_quests()
     # Try to load items with game_data.load_items()
     # Handle MissingDataFileError, InvalidDataFormatError
     # If files missing, create defaults with game_data.create_default_data_files()
     try:
-        all_quests = game_data.load_quests()
+        all_quests = game_data.load_quests() 
         all_items = game_data.load_items()
     except MissingDataFileError:
         print("Data files missing. Creating default data files...")
@@ -458,7 +458,7 @@ def handle_character_death():
     """Handle character death"""
     global current_character, game_running
     
-    # TODO: Implement death handling
+    # death handling
     # Display death message
     # Offer: Revive (costs gold) or Quit
     # If revive: use character_manager.revive_character()
