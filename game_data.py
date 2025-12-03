@@ -4,7 +4,7 @@ Game Data Module - Starter Code
 
 Name: Vanessa Gray
 
-AI Usage: AI assisted in writing load and parse functions as well as and debugging this code.
+AI Usage: AI assisted in writing load and parse functions as well and debugging this code.
 
 This module handles loading and validating game data from text files.
 """
@@ -56,14 +56,20 @@ def load_quests(filename="data/quests.txt"):
         quest_dict = parse_quest_block(lines)
         validate_quest_data(quest_dict)
 
-        quest_id = quest_dict.get("quest_id")
+        if "quest_id" not in quest_dict:
+            # Raise the format error if the key is completely missing
+            raise InvalidDataFormatError("Missing quest_id field.")
+
+        # Retrieve the ID directly now that we know it exists
+        quest_id = quest_dict["quest_id"]
+        
+        # Check if the retrieved ID is empty (e.g., if saved as quest_id: )
         if not quest_id:
             raise InvalidDataFormatError("Missing quest_id field.")
 
         quests[quest_id] = quest_dict
 
     return quests
-
 
 def load_items(filename="data/items.txt"):
     """
@@ -95,27 +101,41 @@ def load_items(filename="data/items.txt"):
         line = line.strip()
 
         if line == "":
-
+            
             if curent_block:
                 item_data = parse_item_block(curent_block)
                 validate_item_data(item_data)
-                item_id = item_data.get("item_id")
+                
+                if "item_id" not in item_data:
+                    raise InvalidDataFormatError("Missing item_id field.")
+                
+                # Retrieve the value directly, now that its existence is confirmed
+                item_id = item_data["item_id"] 
 
+                # Check if the retrieved ID is empty (e.g., if saved as item_id: )
                 if not item_id:
                     raise InvalidDataFormatError("Missing item_id field.")
+                    
                 items[item_id] = item_data
                 curent_block = []
         else:
             curent_block.append(line)
    
     if curent_block:
-
+        
         item_data = parse_item_block(curent_block)
         validate_item_data(item_data)
-        item_id = item_data.get("item_id")
 
+        if "item_id" not in item_data:
+            raise InvalidDataFormatError("Missing item_id field.")
+        
+        # Retrieve the value directly, now that its existence is confirmed
+        item_id = item_data["item_id"]
+
+        # Check if the retrieved ID is empty
         if not item_id:
             raise InvalidDataFormatError("Missing item_id field.")
+            
         items[item_id] = item_data
 
     return items

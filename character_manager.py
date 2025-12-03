@@ -160,10 +160,14 @@ def load_character(character_name, save_directory="data/save_games"):
       #  if ": " not in line:
       #      raise InvalidSaveDataError(f"Invalid line format: {line.strip()}")
       # 
-        try:   
-            key, value = line.strip().split(": ", 1)
-        except ValueError:
+        
+        parts = line.strip().split(":", 1)
+
+        if len(parts) != 2:
             raise InvalidSaveDataError(f"Invalid line format: {line.strip()}")
+        
+        key, value = parts
+
         key = key.lower()   
         value = value.strip()
 

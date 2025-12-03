@@ -449,6 +449,7 @@ def display_combat_stats(character, enemy):
     """
     # TODO: Implement status display
     print("\n=== Combat Status ===")
+    
     print(f"\n{character['name']}: HP={character['health']}/{character['max_health']}")
     print(f"{enemy['name']}: HP={enemy['health']}/{enemy['max_health']}")
 
