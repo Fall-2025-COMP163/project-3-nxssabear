@@ -1,6 +1,5 @@
-# ⚔️ Quest Chronicles: Technical Core Documentation
+# COMP 163 - Project 3:⚔️ Quest Chronicles
 
-## Project 3: Core Game Engine Development
 Name: Vanessa Gray
  
 Date: 02-Dec-2025
