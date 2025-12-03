@@ -1,151 +1,126 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/wnCpjX4n)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-2e0aaae1b6195c2367325f4f02e2d04e9abb55f0b24a779b69b11b9e10269abc.svg)](https://classroom.github.com/online_ide?assignment_repo_id=21903934&assignment_repo_type=AssignmentRepo)
-# COMP 163: Project 3 - Quest Chronicles
+# COMP 163 - Project 3:⚔️ Quest Chronicles
 
-**AI Usage: Free Use (with explanation requirement)**
+Name: Vanessa Gray
+ 
+Date: 02-Dec-2025
 
-## Overview
+| **AI Usage** | AI assisted in writing load and parse functions, debugging, load/save character function validation, and implementing core combat/quest logic. AI also helped me create this README file. |
 
-Build a complete modular RPG adventure game demonstrating mastery of **exceptions and modules**.
+---
 
-## Getting Started
+# 1. Game Data Module
 
-### Step 1: Accept Assignment
-1. Click the assignment link provided in Blackboard
-2. Accept the assignment - this creates your personal repository
-3. Clone your repository to your local machine:
-```bash
-git clone [your-personal-repo-url]
-cd [repository-name]
-```
+*This module handles loading and validating game data from text files.*
 
-### Step 2: Understand the Project Structure
+### Data Loading Functions
+| load_quests -  Load quest data from file. | data/quests.txt |
+| load_items -  Load item data from file. | data/items.txt |
+| create_default_data_files - Create default quests.txt and items.txt files if they do not exist, and creates the data directory.
 
-Your repository contains:
+### Expected Data Formats
 
-```
-quest_chronicles/
-├── main.py                     # Game launcher (COMPLETE THIS)
-├── character_manager.py        # Character creation/management (COMPLETE THIS)
-├── inventory_system.py         # Item and equipment management (COMPLETE THIS)
-├── quest_handler.py            # Quest system (COMPLETE THIS)
-├── combat_system.py            # Battle mechanics (COMPLETE THIS)
-├── game_data.py                # Data loading and validation (COMPLETE THIS)
-├── custom_exceptions.py        # Exception definitions (PROVIDED)
-├── data/
-│   ├── quests.txt             # Quest definitions (PROVIDED)
-│   ├── items.txt              # Item database (PROVIDED)
-│   └── save_games/            # Player save files (created automatically)
-├── tests/
-│   ├── test_module_structure.py       # Module organization tests
-│   ├── test_exception_handling.py     # Exception handling tests
-│   └── test_game_integration.py       # Integration tests
-└── README.md                   # This file
-```
+Data files must be separated by blank lines (`\n\n`) into blocks.
 
-### Step 3: Development Workflow
+#### Quest Data Format
+* QUEST_ID, TITLE, DESCRIPTION, REWARD_XP (int), REWARD_GOLD (int), REQUIRED_LEVEL (int), PREREQUISITE (or NONE).
 
-```bash
-# Work on one module at a time
-# Test your code frequently
+#### Item Data Format
+* ITEM_ID, NAME, TYPE (weapon/armor/consumable), EFFECT (stat:value), COST (int), DESCRIPTION.
 
-# Commit and push to see test results
-git add .
-git commit -m "Implement character_manager module"
-git push origin main
+### Validation Functions
+* validate_quest_data: Ensures required fields (quest_id, title, reward_xp, etc.) are present and numerical fields are integers.
+* validate_item_data: Ensures required fields (item_id, name, etc.) are present, type is one of weapon|armor|consumable, and cost is an integer.
+* validate_quest_prerequisites : Checks that every PREREQUISITE (if not "NONE") refers to a valid, existing quest ID.
 
-# Check GitHub for test results (green checkmarks = passed!, red xs = at least 1 failed test case. Click the checkmark or x and then "Details" to see what test cases passed/failed)
-```
+---
 
-## Core Requirements (60 Points)
+# 2. Character Manager Module
 
-### Critical Constraint
-You may **only** use concepts covered through the **Exceptions and Modules** chapters. 
+*This module handles character creation, loading, and saving.*
 
-### 🎨 Creativity and Customization
+### Management Functions
 
-This project encourages creativity! Here's what you can customize:
+| create_character: Creates a new character dictionary with base stats determined by class (Warrior, Mage, Rogue, Cleric). |
+| save_character: Writes character data to {character_name}_save.txt in data/save_games. List fields are saved as comma-separated strings. |
+| load_character: Reads character data from a save file, parsing comma-separated strings back into Python lists. Includes comprehensive error handling for corrupted files. |
+| list_saved_characters:  Returns a list of character names in the save directory. |
+| delete_character: Removes a character's save file. |
 
-**✅ FULLY CUSTOMIZABLE:**
-- **Character stats** - Adjust health, strength, magic for balance
-- **Enemy stats** - Make enemies easier or harder
-- **Special abilities** - Design unique abilities for each class
-- **Additional enemies** - Add your own enemy types beyond the required three
-- **Game mechanics** - Add status effects, combos, critical hits, etc.
-- **Quest rewards** - Adjust XP and gold amounts
-- **Item effects** - Create unique items with creative effects
+### Operations & Growth
+* **gain_experience(character, xp_amount)**: Adds XP, handles level-up (level +1, max\_health +15, strength +4, magic +3).
+* **add_gold(character, amount)**: Updates gold total, raises ValueError if the result is negative.
+* **heal_character(character, amount)**: Restores HP, capped at max_health.
+* **revive_character(character)**: Restores health to 50% of max_health.
 
-**⚠️ REQUIRED (for testing):**
-- **4 Character classes:** Warrior, Mage, Rogue, Cleric (names must match exactly)
-- **3 Enemy types:** "goblin", "orc", "dragon" (must exist, stats flexible)
-- **All module functions** - Must have the specified function signatures
-- **Exception handling** - Must raise appropriate exceptions
+---
 
-**💡 CREATIVITY TIPS:**
-1. Start with required features working
-2. Add creative elements incrementally
-3. Test after each addition
-4. Be ready to explain your design choices in the interview
-5. Bonus interview points for thoughtful, balanced customization!
+# 3. Inventory System Module
 
-**Example Creative Additions:**
-- Vampire enemy that heals when attacking
-- Warrior "Last Stand" ability that activates when health is low
-- Poison status effect that deals damage over time
-- Critical hit system based on character stats
-- Rare "legendary" weapons with special effects
+*This module handles inventory management, item usage, and equipment.*
 
-### Module 1: custom_exceptions.py (PROVIDED - 0 points to implement)
+### Inventory Core
+* ** MAX_INVENTORY_SIZE **: Set to **20**.
+* ** add_item_to_inventory **: Raises InventoryFullError if capacity is reached.
+* ** remove_item_from_inventory **: Removes an item instance.
+* ** count_item / get_inventory_space_remaining / clear_inventory **: Utility functions for tracking inventory contents.
 
-**This module is provided complete.** It defines all custom exceptions you'll use throughout the project.
+### Item Usage and Equipment
 
-### Module 2: game_data.py (10 points)
+| Function | Item Type Handled | Logic |
+| :--- | :--- | :--- |
+| use_item | consumable | Applies effect (e.g., health:20), then removes the item from inventory. |
+| equip_weapon / equip_armor | weapon / armor | If an item is already equipped, its bonus is removed, and the old item is returned to inventory before the new item's bonus is applied and stored. |
+| unequip_weapon / unequip_armor | N/A | Removes the stat bonus, returns the item to inventory, and clears the equipped slot. Raises InventoryFullError if the inventory cannot accept the item. |
 
-### Module 3: character_manager.py (15 points)
+---
 
-### Module 4: inventory_system.py (10 points)
+# 4. Quest Handler Module
 
-### Module 5: quest_handler.py (10 points)
+*This module handles quest management, dependencies, and completion.*
 
-### Module 6: combat_system.py (10 points)
+### Quest Lifecycle
 
-### Module 7: main.py (5 points)
+| Function | Requirements/Result |
+| :--- | :--- |
+| accept_quest | Requires: Character **level** $\ge$ required\_level, **prerequisite** completed, quest not already active/completed. |
+| complete_quest | Requires: Quest must be in active_quests. Removes from active, adds to completed, and grants reward_xp and reward_gold. |
+| abandon_quest | Removes a quest from active_quests without rewards. |
 
-## Automated Testing & Validation (60 Points)
+### Retrieval & Statistics
+* get_active_quests / get_completed_quests / get_available_quests: Functions to filter and retrieve full quest data dictionaries.
+* get_quest_prerequisite_chain: Traces a quest's prerequisites backward to determine the entire dependency path.
+* get_quest_completion_percentage: Calculates the percentage of all quests completed.
 
-## Interview Component (40 Points)
+---
 
-**Creativity Bonus** (up to 5 extra points on interview):
-- Added 2+ custom enemy types beyond required three
-- Designed unique and balanced special abilities
-- Implemented creative game mechanics (status effects, advanced combat, etc.)
-- Thoughtful stat balancing with clear reasoning
+# 5. Combat System Module
 
-**Note:** Creativity is encouraged, but functionality comes first! A working game with required features scores higher than a broken game with lots of extras.
+*Handles combat mechanics via the SimpleBattle class.*
 
-### Update README.md
+### Enemy Definitions (via `create_enemy`)
+* **goblin**: health=50, strength=8, magic=2, xp\_reward=25, gold\_reward=10
+* **orc**: health=80, strength=12, magic=5, xp\_reward=50, gold\_reward=25
+* **dragon**: health=200, strength=25, magic=15, xp\_reward=200, gold\_reward=100
 
-Document your project with:
+### `SimpleBattle` Class
+* **Damage Formula**: attacker['strength'] - (defender['strength'] // 4).
+* ** attempt_escape **: $50\%$ success chance.
+* **use_special_ability**: Executes a class-specific action:
+    * **Warrior**: Power Strike ($2 \times$ strength damage).
+    * **Mage**: Fireball ($2 \times$ magic damage).
+    * **Rogue**: Critical Strike ($3 \times$ strength damage, $50\%$ chance).
+    * **Cleric**: Heal (restore 30 health).
 
-1. **Module Architecture:** Explain your module organization
-2. **Exception Strategy:** Describe when/why you raise specific exceptions
-3. **Design Choices:** Justify major decisions
-4. **AI Usage:** Detail what AI assistance you used
-5. **How to Play:** Instructions for running the game
+---
 
-### What to Submit:
+# 6. Main Game Module
 
-1. **GitHub Repository:** Your completed multi-module project
-2. **Interview:** Complete 10-minute explanation session
-3. **README:** Updated documentation
+*This is the main game file that ties all modules together.*
 
-## Protected Files Warning
+### Game State
+* Global variables: current_character, all_quests, all_items, game_running.
 
-⚠️ **IMPORTANT: Test Integrity**
-
-Test files are provided for your learning but are protected. Modifying test files constitutes academic dishonesty and will result in:
-
-- Automatic zero on the project
-- Academic integrity investigation
-
-You can view tests to understand requirements, but any modifications will be automatically detected.
+### Menu Functions
+* main_menu(): Presents New Game, Load Game, and Exit options.
+* new_game(): Prompts for name/class and uses character_manager.create_character.
+* load_game(): Lists saved characters and loads selected file using character_manager.load_character.
