@@ -143,7 +143,7 @@ def use_item(character, item_id, item_data):
     apply_stat_effect(character, stat_name, value)
     remove_item_from_inventory(character, item_id)
 
-    return f"Used {item_data['name']}, {stat_name} increased by {value}."
+    return f"Used {item_id}, {stat_name} increased by {value}."
 
 def equip_weapon(character, item_id, item_data):
     """
@@ -181,9 +181,10 @@ def equip_weapon(character, item_id, item_data):
         raise InvalidItemTypeError("Item is not a weapon.")
     
     if 'equipped_weapon' in character and character['equipped_weapon'] is not None:
+        current_weapon_id = character['equipped_weapon']
        
         # Unequip current weapon
-        current_weapon_id = character['equipped_weapon']
+        current_weapon_data = character['game_data']['items'][current_weapon_id]
         current_weapon_effect = item_data['effect']  # This should ideally fetch the effect of the currently equipped weapon
         
         stat_name, value = parse_item_effect(current_weapon_effect)
@@ -192,10 +193,13 @@ def equip_weapon(character, item_id, item_data):
 
     stat_name, value = parse_item_effect(item_data['effect'])
     apply_stat_effect(character, stat_name, value)  # Apply new weapon bonus
+
     character['equipped_weapon'] = item_id
+    character["equippe_weapon_effect"] = item_data['effect']
+
     remove_item_from_inventory(character, item_id)
 
-    return f"Equipped {item_data['name']}, {stat_name} increased by {value}."
+    return f"Equipped {item_id}, {stat_name} increased by {value}."
 
 def equip_armor(character, item_id, item_data):
     """
@@ -220,6 +224,7 @@ def equip_armor(character, item_id, item_data):
     # TODO: Implement armor equipping
     # Similar to equip_weapon but for armor
     inventory = character['inventory']
+
     if item_id not in inventory:
         raise ItemNotFoundError("Item not found in inventory.")
     
@@ -227,22 +232,20 @@ def equip_armor(character, item_id, item_data):
         raise InvalidItemTypeError("Item is not armor.")
     
     if 'equipped_armor' in character and character['equipped_armor'] is not None:
-       
-        # Unequip current armor
         current_armor_id = character['equipped_armor']
+
+        current_armor_data = character['game_data']['items'][current_armor_id]
         current_armor_effect = item_data['effect']  # This should ideally fetch the effect of the currently equipped armor
         
         stat_name, value = parse_item_effect(current_armor_effect)
         apply_stat_effect(character, stat_name, -value)  # Remove bonus
         add_item_to_inventory(character, current_armor_id)  # Add back to inventory
 
-        effect_string = item_data['effect']
-
     stat_name, value = parse_item_effect(item_data['effect'])
     apply_stat_effect(character, stat_name, value)  # Apply new armor bonus
 
     character['equipped_armor'] = item_id
-    character["equippe_armor_effect"] = effect_string
+    character["equippe_armor_effect"] = item_data['effect']
 
     remove_item_from_inventory(character, item_id)
 
@@ -256,19 +259,26 @@ def unequip_weapon(character):
     Raises: InventoryFullError if inventory is full
     """
     # weapon unequipping
+    if "equipped_weapon" not in character or character['equipped_weapon'] is None:
+        return None
     
     weapon_id = character["equipped_weapon"]
-    if weapon_id is None:
-        return None
     
     if len(character['inventory']) >= MAX_INVENTORY_SIZE:
         raise InventoryFullError("Inventory is full.")
     
-    weapon_data = character["game_data"]['items'][weapon_id]
-    stat_name, value = parse_item_effect(weapon_data['effect'])
-    character[stat_name]  -= value  # Remove bonus
+    effect = character["equippe_weapon_effect"]  
+
+    stat_name,value = parse_item_effect(effect)
+
+    apply_stat_effect(character, stat_name, -value)  # Remove bonus
+
+    character['inventory'].append(weapon_id)
+
 
     character['equipped_weapon'] = None
+    character["equippe_weapon_effect"] = None
+
     return weapon_id
 
 def unequip_armor(character):
@@ -285,17 +295,18 @@ def unequip_armor(character):
         return None
     
     armor_id = character["equipped_armor"]
-    effect = character["equippe_armor_effect"]  
 
     if len(inventory) >= MAX_INVENTORY_SIZE:
         raise InventoryFullError("Inventory is full.")
     
+    effect = character["equipped_armor_effect"]  
+
     stat_name,value = parse_item_effect(effect)
     apply_stat_effect(character, stat_name, -value)  # Remove bonus
 
     inventory.append(armor_id)
     character['equipped_armor'] = None
-    character["equippe_armor_effect"] = None
+    character["equipped_armor_effect"] = None
 
     return armor_id
 

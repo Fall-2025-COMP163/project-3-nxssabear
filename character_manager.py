@@ -115,7 +115,7 @@ def save_character(character, save_directory="data/save_games"):
             f.write(f"INVENTORY: {','.join(character['inventory'])}\n")
             f.write(f"ACTIVE_QUESTS: {','.join(character['active_quests'])}\n")
             f.write(f"COMPLETED_QUESTS: {','.join(character['completed_quests'])}\n")
-        return True
+        return True 
     
 
     except (PermissionError, IOError) as e:
@@ -157,10 +157,13 @@ def load_character(character_name, save_directory="data/save_games"):
     for line in lines:
         if line.strip() == "":
             continue
-        if ": " not in line:
+      #  if ": " not in line:
+      #      raise InvalidSaveDataError(f"Invalid line format: {line.strip()}")
+      # 
+        try:   
+            key, value = line.strip().split(": ", 1)
+        except ValueError:
             raise InvalidSaveDataError(f"Invalid line format: {line.strip()}")
-        
-        key, value = line.strip().split(": ", 1)
         key = key.lower()   
         value = value.strip()
 
@@ -306,6 +309,9 @@ def revive_character(character):
     Returns: True if revived
     """
     # Restore health to half of max_health
+    if character['health'] > 0:
+        return False
+    
     if character['health'] <= 0:
         character['health'] = character['max_health'] // 2
         return True
